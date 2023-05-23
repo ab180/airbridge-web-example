@@ -1,0 +1,43 @@
+name: release
+
+on:
+  push:
+    branches: main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'release'
+
+jobs:
+  release:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.0
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Prepare PUBLIC_URL
+        run: |
+          PUBLIC_URL=$(echo $GITHUB_REPOSITORY | sed 's/^..*\/\(..*\)$/\/\1\//g')
+          echo 'PUBLIC_URL='$PUBLIC_URL >> $GITHUB_ENV
+      - name: Build
+        run: npm run build
+      - name: Upload
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './build'
+      - name: Release
+        uses: actions/deploy-pages@v2
