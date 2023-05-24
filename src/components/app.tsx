@@ -1,6 +1,6 @@
 import airbridge from 'airbridge-web-sdk-loader'
 import { useEffect, useState } from 'react'
-import { optional } from 'tyfell'
+import { extract, optional } from 'tyfell'
 import { AIRBRIDGE_TOKEN } from '../constants/airbridge_token'
 import { AppContext } from '../entities/app_context'
 import '../styles/app.css'
@@ -72,9 +72,11 @@ function App() {
                 <button onClick={() => {
                     trackEvent('example-event')
                 }}>Track Event</button>
-                <button onClick={() => {
-                    openDeeplink(new URL(`${context.app}://deeplink`)!)
-                }}>Open Deeplink</button>
+                { extract(window, 'AirbridgeNative') === undefined ? (
+                    <button onClick={() => {
+                        openDeeplink(new URL(`${context.app}://deeplink`)!)
+                    }}>Open Deeplink</button>
+                ) : undefined }
             </header>
         </div>
     ) : (

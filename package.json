@@ -9,7 +9,7 @@
     "airbridge-web-sdk-loader": "^1.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tyfell": "^0.9.2"
+    "tyfell": "^0.9.3"
     
   },
   "devDependencies": {
